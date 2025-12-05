@@ -1,5 +1,6 @@
 ﻿using ElectronicsStore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,10 @@ using System.Threading.Tasks;
 
 
 public class Program
+
+
 {
-    static string allProductsText = "";
+    static List<Product> products = new List<Product>();
 
     static int productCount = 0;
 
@@ -66,7 +69,7 @@ public class Program
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("=================================================");
-            Console.WriteLine("|    МАГАЗИН ЕЛЕКТРОТЕХНІКИ | ГОЛОВНЕ МЕНЮ      |");
+            Console.WriteLine("|    МАГАЗИН ЕЛЕКТРОТЕХНІКИ | ГОЛОВНЕ МЕНЮ      |");
             Console.WriteLine("=================================================");
             Console.WriteLine("");
 
@@ -126,20 +129,20 @@ public class Program
         Console.ResetColor();
         Console.WriteLine();
 
-        //Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Товари які є в наявності: ");
+        //Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Товари які є в наявності: ");
         Console.WriteLine("Телевізор - 10000 грн/шт");
         Console.WriteLine("Телефон - 20000 грн/шт");
         Console.WriteLine("Ноутбук - 30000 грн/шт");
         Console.WriteLine("PS 5 - 25000 грн/шт");
         Console.WriteLine("Планшет - 15000 грн/шт");
         Console.WriteLine("Геймпад - 3000 грн/шт");
-        //Console.ResetColor();
-        Console.ReadLine();
+        //Console.ResetColor();
+        Console.ReadLine();
         Console.WriteLine();
 
-        //Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine("==== Введіть кількість товарів яких вам потрібно ====");
+        //Console.ForegroundColor = ConsoleColor.Blue;
+        Console.WriteLine("==== Введіть кількість товарів яких вам потрібно ====");
         Console.WriteLine();
 
         double TVPrice = 10000;
@@ -167,11 +170,11 @@ public class Program
 
         Console.Write("Введіть кількість геймпадів (шт): ");
         double amountGamepad = Check();
-        //Console.ResetColor();
-        Console.WriteLine("\n");
+        //Console.ResetColor();
+        Console.WriteLine("\n");
 
-        //Console.ForegroundColor = ConsoleColor.Yellow;
-        double totalTV = amountTV * TVPrice;
+        //Console.ForegroundColor = ConsoleColor.Yellow;
+        double totalTV = amountTV * TVPrice;
         double totalPhone = amountPhone * PhonePrice;
         double totalLaptop = amountLaptop * LaptopPrice;
         double totalPS5 = amountPS5 * PS5Price;
@@ -208,11 +211,11 @@ public class Program
         double SqrtrValue = Math.Sqrt(totalPrice);
         SqrtrValue = Math.Round(SqrtrValue, 2);
         Console.WriteLine("Квадратний корінь від загальної суми: " + SqrtrValue);
-        //Console.ResetColor();
-        Console.ReadLine();
+        //Console.ResetColor();
+        Console.ReadLine();
 
         Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("       Дякуємо за покупку!");
+        Console.WriteLine("       Дякуємо за покупку!");
         Console.WriteLine();
         Console.WriteLine("Ви придбали: ");
         Console.WriteLine("Телевізор - " + amountTV + " шт");
@@ -242,13 +245,18 @@ public class Program
         }
         return isNumber;
     }
+    public static double Check(string prompt)
+    {
+        Console.WriteLine(prompt);
+        return Check();
+    }
     public static void ServiceAndWarrantyMenu()
     {
 
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("==========================================================");
-        Console.WriteLine("|   УПРАВЛІННЯ ГАРАНТІЄЮ та СЕРВІСНИМ ОБСЛУГОВУВАННЯМ   |");
+        Console.WriteLine("|   УПРАВЛІННЯ ГАРАНТІЄЮ та СЕРВІСНИМ ОБСЛУГОВУВАННЯМ   |");
         Console.WriteLine("==========================================================");
 
         Console.WriteLine("1.ЗАРЕЄСТРУВАТИ НОВИЙ ГАРАНТІЙНИЙ ВИПАДОК");
@@ -305,7 +313,7 @@ public class Program
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("==========================================================");
-        Console.WriteLine("|                       ПОСТАЧАННЯ                       |");
+        Console.WriteLine("|                       ПОСТАЧАННЯ                       |");
         Console.WriteLine("==========================================================");
 
         Console.WriteLine("1.Логістика та склад");
@@ -362,19 +370,20 @@ public class Program
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.DarkMagenta;
         Console.WriteLine("==========================================================");
-        Console.WriteLine("|                    КАТАЛОГ ТОВАРУ                      |");
+        Console.WriteLine("|                    КАТАЛОГ ТОВАРУ                      |");
         Console.WriteLine("==========================================================");
 
         Console.WriteLine("1.Додати товар");
         Console.WriteLine("2.Переглянути товар");
-        Console.WriteLine("3.Якість товару");
-        Console.WriteLine("4.Утворення товару");
+        Console.WriteLine("3.Пошук товару");
+        Console.WriteLine("4.Видалення товару");
+        Console.WriteLine("5.Сортування товару");
         Console.WriteLine("");
         Console.WriteLine("----------------------------------------------------------");
         Console.WriteLine("0.ВЕРНУТИСЯ ДО ГОЛОВНОГО МЕНЮ");
         Console.WriteLine();
         Console.WriteLine("----------------------------------------------------------");
-        Console.Write("Введіть номер опції (0-4): ");
+        Console.Write("Введіть номер опції (0-5): ");
         double choice1 = Check();
 
         switch (choice1)
@@ -386,16 +395,13 @@ public class Program
                 ViewProducts();
                 break;
             case 3:
-                Console.WriteLine("Ця функція тимчасово не доступна!");
-                Console.WriteLine("Натисніть будь-яку клавішу щоб продовжити...");
-                Console.ReadKey();
-                ShowProducts();
+                SearchProduct();
                 break;
             case 4:
-                Console.WriteLine("Ця функція тимчасово не доступна!");
-                Console.WriteLine("Натисніть будь-яку клавішу щоб продовжити...");
-                Console.ReadKey();
-                ShowProducts();
+                DeleteProduct();
+                break;
+            case 5:
+                SortProducts();
                 break;
             case 0:
                 MainMenu();
@@ -431,24 +437,17 @@ public class Program
             string category = Console.ReadLine();
 
             Console.Write("Ціна: ");
-            if (double.TryParse(Console.ReadLine(), out double price))
-            {
-                Product newProduct = new Product(name, category, price);
+            double price = Check();
 
-                productCount++;
+            int id = productCount + 1;
 
-                string newEntry = $"{productCount}. {newProduct.Name} ({newProduct.Category}) - {newProduct.Price} грн~\n";
+            Product newProduct = new Product(id, name, category, price);
+            products.Add(newProduct);
 
-                allProductsText = allProductsText + newEntry;
+            Console.WriteLine("Товар додано!");
 
-                Console.WriteLine("Товар додано!");
-            }
-            else
-            {
-                Console.WriteLine("Помилка ціни!");
-                Pause();
-                continue;
-            }
+            productCount++;
+
             Console.WriteLine("------------------------------------------");
             Console.WriteLine("Чи хочете додати ще один товар?");
             Console.WriteLine("Так - 1, Ні - 0");
@@ -467,91 +466,209 @@ public class Program
         Console.Clear();
         Console.WriteLine("--- ПЕРЕГЛЯД ---");
 
-        if (allProductsText == "")
+        if (products.Count == 0)
         {
             Console.WriteLine("Список порожній.");
         }
         else
         {
-            Console.WriteLine(allProductsText);
+            int i = 1;
+            foreach (Product item in products)
+            {
+                Console.WriteLine("--------------------------------------------------------------------------");
+                Console.WriteLine("{0,-5} {1,-35} {2,-15} {3,15:N2}", i, item.Name, item.Category, item.Price);
+                Console.WriteLine("--------------------------------------------------------------------------");
+                i++;
+            }
         }
-
         Pause();
         ShowProducts();
     }
 
     static void ShowAnalytics()
     {
-            Console.Clear();
-            Console.WriteLine("======================= АНАЛІТИКА КАТАЛОГУ =======================");
+        Console.Clear();
+        Console.WriteLine("======================= АНАЛІТИКА КАТАЛОГУ =======================");
 
-            double totalSum = 0;
-            double minPrice = double.MaxValue;
-            double maxPrice = double.MinValue;
-            int currentIndex = 0;
+        if (products.Count == 0)
+        {
+            Console.WriteLine("Список порожній.");
+            Pause();
+            return;
+        }
+        double totalSum = 0;
+        double maxPrice = double.MinValue;
+        double minPrice = double.MaxValue;
+        string cheapProduct = "";
+        string exspensiveProduct = "";
 
-            while (true)
+        foreach (Product item in products)
+        {
+            totalSum += item.Price;
+
+            if (item.Price > maxPrice)
             {
-                int priceStartMarker = allProductsText.IndexOf(" - ", currentIndex);
-
-                if (priceStartMarker == -1) break;
-
-                int priceEndMarker = allProductsText.IndexOf(" грн~", priceStartMarker);
-
-                if (priceEndMarker == -1) break;
-
-
-                int priceValueStartIndex = priceStartMarker + 3;
-                int length = priceEndMarker - priceValueStartIndex;
-
-                if (length <= 0) break;
-
-                string priceString = allProductsText.Substring(priceValueStartIndex, length);
-
-                if (double.TryParse(priceString, out double priceValue))
-                {
-                    totalSum += priceValue;
-
-                    if (priceValue < minPrice) minPrice = priceValue;
-                    if (priceValue > maxPrice) maxPrice = priceValue;
-                }
-
-                int nextLineStart = allProductsText.IndexOf('\n', priceEndMarker);
-
-                if (nextLineStart == -1) break;
-
-                currentIndex = nextLineStart + 1;
+                maxPrice = item.Price;
+                exspensiveProduct = item.Name;
             }
-
-            double averagePrice = 0;
-
-            if (productCount > 0)
+            if (item.Price < minPrice)
             {
-                averagePrice = totalSum / productCount;
+                minPrice = item.Price;
+                cheapProduct = item.Name;
             }
+        }
 
-            Console.WriteLine($"Загальна кількість товарів: {productCount}");
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine($"Сума всіх продуктів: {totalSum:N2} грн");
-            Console.WriteLine($"Середня ціна: {averagePrice:N2} грн");
 
-            if (productCount > 0)
-            {
-                Console.WriteLine($"Найдорожчий товар (ціна): {maxPrice:N2} грн");
-                Console.WriteLine($"Найдешевший товар (ціна): {minPrice:N2} грн");
-            }
-            else
-            {
-                Console.WriteLine("Немає даних для аналітики цін.");
-            }
-            Pause();        
-    }          
+        double averagePrice = 0;
+        if (products.Count > 0)
+        {
+            averagePrice = totalSum / products.Count;
+        }
+
+        Console.WriteLine($"Кількість товарів: {productCount}");
+        Console.WriteLine($"---------------------------------");
+        Console.WriteLine($"Загальна сума: {totalSum:N2}");
+        Console.WriteLine($"Середня ціна: {averagePrice:N2}");
+
+        if (products.Count > 0)
+        {
+            Console.WriteLine($"Найдорожчий товар: {exspensiveProduct} - {maxPrice:N2} грн");
+            Console.WriteLine($"Найдешевший товар: {cheapProduct} - {minPrice:N2} грн");
+        }
+        Pause();
+    }
     public static void Pause()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Натисніть будь-яку клавішу, щоб продовжити...");
+        Console.WriteLine("Нажміть будь-яку клавішу на клавіатурі...");
         Console.ReadKey();
         Console.ResetColor();
+    }
+    public static void SearchProduct()
+    {
+        Console.Clear();
+        Console.WriteLine("----Пошук товару----");
+        Console.WriteLine("-Введіть товар який хочете знайти-");
+        string querty = Console.ReadLine();
+        Console.WriteLine($"Шукаємо: {querty}...");
+
+        bool exists = false;
+        int foundIndex = -1;
+        for (int i = 0; i < products.Count; i++)
+        {
+            if (products[i].Name.ToLower() == querty.ToLower())
+            {
+                foundIndex = i;
+                exists = true;
+                break;
+            }
+        }
+        if (exists)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\nЗнайдено товар!");
+            Console.WriteLine("---------------------------------------------------");
+            Console.WriteLine($"Назва: {products[foundIndex].Name}");
+            Console.WriteLine($"Категорія: {products[foundIndex].Category}");
+            Console.WriteLine($"Ціна: {products[foundIndex].Price:N2} грн");
+            Console.WriteLine("---------------------------------------------------");
+            Console.ResetColor();
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine($"Товар з назвою '{querty}' не знайдено.");
+            Console.ResetColor();
+        }
+        Pause();
+        ShowProducts();
+    }
+    public static void DeleteProduct()
+    {
+        Console.Clear();
+        Console.WriteLine("=== Всі товари === ");
+        for (int i = 0; i < products.Count; i++)
+        {
+            products[i].Print(i);
+        }
+
+        int choice = (int)Check("Оберіть індекс для видалення");
+        if (choice >= products.Count)
+        {
+            Console.WriteLine("Такого індекса немає");
+            Pause();
+            ShowProducts();
+        }
+        else
+        {
+            Console.WriteLine("Товар видалено");
+            products.RemoveAt(choice);
+            Pause();
+            ShowProducts();
+        }
+    }
+    public static void SortProducts()
+    {
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("================ СОРТУВАННЯ ТОВАРУ ЗА ЦІНОЮ ===============");
+        Console.ResetColor();
+
+        if (products.Count == 0)
+        {
+            Console.WriteLine("Список товарів порожній. Нічого сортувати.");
+            Pause();
+            ShowProducts();
+            return;
+        }
+
+        Console.WriteLine("Оберіть тип сортування:");
+        Console.WriteLine("1. За зростанням ціни (від дешевих до дорогих)");
+        Console.WriteLine("2. За спаданням ціни (від дорогих до дешевих)");
+        Console.WriteLine("0. Назад");
+        Console.Write("Введіть номер опції (0-2): ");
+
+        double choice = Check();
+        bool sorted = false;
+
+        switch (choice)
+        {
+            case 1:
+                products.Sort((p1, p2) => p1.Price.CompareTo(p2.Price));
+                Console.WriteLine("\n Товари відсортовано за зростанням ціни.");
+                sorted = true;
+                break;
+            case 2:
+                products.Sort((p1, p2) => p2.Price.CompareTo(p1.Price));
+                Console.WriteLine("\n Товари відсортовано за спаданням ціни.");
+                sorted = true;
+                break;
+            case 0:
+                ShowProducts();
+                return;
+            default:
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Некоректний вибір. Спробуйте ще раз.");
+                Console.ResetColor();
+                Pause();
+                SortProducts();
+                return;
+        }
+
+        if (sorted)
+        {
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("{0,-5} {1,-35} {2,-15} {3,15}", "№", "Назва", "Категорія", "Ціна (грн)");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------");
+            for (int i = 0; i < products.Count; i++)
+            {
+                Console.WriteLine("{0,-5} {1,-35} {2,-15} {3,15:N2}", (i + 1), products[i].Name, products[i].Category, products[i].Price);
+            }
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+        }
+
+        Pause();
+        ShowProducts();
     }
 }
 
